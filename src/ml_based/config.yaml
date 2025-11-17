@@ -1,0 +1,47 @@
+dataset:
+  name: AiresPucrs/toxic-comments
+  split: train
+  text_column: null
+  label_column: null
+  test_size: 0.2
+  random_state: 42
+  k_folds: 5
+
+preprocessing:
+  lowercase: true
+  remove_urls: true
+  remove_mentions_hashtags: true
+  remove_punctuation: true
+  remove_stopwords: true
+  lemmatize: true
+  stopwords_language: english
+
+features:
+  tfidf:
+    max_features: 5000
+    ngram_range: [1, 2]
+    min_df: 2
+    max_df: 0.9
+  embedding:
+    model_name: sentence-transformers/all-MiniLM-L6-v2
+    batch_size: 32
+
+models:
+  logistic_regression:
+    C: 1.0
+    max_iter: 1000
+    class_weight: balanced
+  linear_svm:
+    C: 1.0
+    max_iter: 1000
+    class_weight: balanced
+  naive_bayes:
+    alpha: 1.0
+  embedding_log_regression:
+    C: 1.0
+    max_iter: 1000
+    class_weight: balanced
+
+output:
+  results_dir: /media/relive/37c3bf4d-5cdc-450a-a045-97d5f9bc78961/project_z/results/ml_based
+  plots_subdir: plots

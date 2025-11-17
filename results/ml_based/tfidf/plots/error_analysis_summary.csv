@@ -1,0 +1,4 @@
+Model,Total_Errors,False_Positives,False_Negatives,Error_Rate
+Logistic Regression (TF-IDF),1001,693,308,0.0713369441277081
+Linear SVM (TF-IDF),907,547,360,0.06463797035347776
+Naive Bayes (TF-IDF),1372,695,677,0.09777651083238312
