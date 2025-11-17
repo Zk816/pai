@@ -14,3 +14,7 @@ data/
 
 
 .DS_Store
+results/
+*.pt
+results/
+*.pt
