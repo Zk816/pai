@@ -16,7 +16,6 @@ from scipy.sparse import csr_matrix
 from sklearn.feature_extraction.text import TfidfVectorizer
 from wordcloud import WordCloud
 
-# Ensure required NLTK assets are available at runtime
 nltk.download("stopwords", quiet=True)
 nltk.download("wordnet", quiet=True)
 nltk.download("omw-1.4", quiet=True)
@@ -105,7 +104,6 @@ def preprocess_texts(df: pd.DataFrame, text_col: str, label_col: str, config: Di
     processed_texts = [cleaner(text) for text in df[text_col].astype(str)]
     labels = df[label_col].values
 
-    # Collapse multilabel into binary if necessary
     if len(labels.shape) > 1:
         labels = (labels.sum(axis=1) > 0).astype(int)
 
@@ -122,7 +120,7 @@ def plot_class_distribution(labels: np.ndarray, output_dir: str) -> str:
     unique, counts = np.unique(labels, return_counts=True)
 
     fig, ax = plt.subplots(figsize=(8, 6))
-    bars = ax.bar(["Non-Toxic", "Toxic"], counts, color=["green", "red"], alpha=0.7)
+    bars = ax.bar(["Toxic", "Non-Toxic"], counts, color=["red", "green"], alpha=0.7)
     ax.set_ylabel("Count")
     ax.set_title("Class Distribution")
     ax.grid(axis="y", alpha=0.3)
@@ -147,8 +145,8 @@ def plot_class_distribution(labels: np.ndarray, output_dir: str) -> str:
 
 def plot_word_stats(texts: List[str], labels: np.ndarray, output_dir: str) -> Tuple[str, str, str]:
     os.makedirs(output_dir, exist_ok=True)
-    toxic_texts = " ".join([text for text, label in zip(texts, labels) if label == 1])
-    non_toxic_texts = " ".join([text for text, label in zip(texts, labels) if label == 0])
+    toxic_texts = " ".join([text for text, label in zip(texts, labels) if label == 0])
+    non_toxic_texts = " ".join([text for text, label in zip(texts, labels) if label == 1])
 
     toxic_words = Counter(toxic_texts.split())
     non_toxic_words = Counter(non_toxic_texts.split())
@@ -184,15 +182,15 @@ def plot_word_stats(texts: List[str], labels: np.ndarray, output_dir: str) -> Tu
 
     fig, axes = plt.subplots(1, 2, figsize=(16, 6))
     toxic_wordcloud = WordCloud(
-        width=800, height=400, background_color="white", colormap="Reds", max_words=100
-    ).generate(toxic_texts)
+        width=800, height=400, background_color="white", colormap="Reds", max_words=100, collocations=False
+    ).generate(toxic_texts.lower())
     axes[0].imshow(toxic_wordcloud, interpolation="bilinear")
     axes[0].axis("off")
     axes[0].set_title("Word Cloud - Toxic Comments", fontsize=16, fontweight="bold")
 
     non_toxic_wordcloud = WordCloud(
-        width=800, height=400, background_color="white", colormap="Greens", max_words=100
-    ).generate(non_toxic_texts)
+        width=800, height=400, background_color="white", colormap="Greens", max_words=100, collocations=False
+    ).generate(non_toxic_texts.lower())
     axes[1].imshow(non_toxic_wordcloud, interpolation="bilinear")
     axes[1].axis("off")
     axes[1].set_title("Word Cloud - Non-Toxic Comments", fontsize=16, fontweight="bold")
@@ -220,8 +218,8 @@ def build_tfidf_features(texts: List[str], config: Dict) -> Tuple[TfidfVectorize
 
 def plot_tfidf_top_features(vectorizer: TfidfVectorizer, features: csr_matrix, labels: np.ndarray, output_dir: str) -> str:
     feature_names = vectorizer.get_feature_names_out()
-    toxic_mask = labels == 1
-    non_toxic_mask = labels == 0
+    toxic_mask = labels == 0
+    non_toxic_mask = labels == 1
 
     toxic_mean = np.asarray(features[toxic_mask].mean(axis=0)).flatten()
     non_toxic_mean = np.asarray(features[non_toxic_mask].mean(axis=0)).flatten()

@@ -43,5 +43,5 @@ models:
     class_weight: balanced
 
 output:
-  results_dir: /media/relive/37c3bf4d-5cdc-450a-a045-97d5f9bc78961/project_z/results/ml_based
+  results_dir: results/ml_based
   plots_subdir: plots

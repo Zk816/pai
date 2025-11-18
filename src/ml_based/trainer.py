@@ -11,7 +11,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.svm import LinearSVC
 
-# Allow running both as a module (`python -m ml_based.trainer`) and as a script
 try:
     from .evaluation import (
         cross_validate_models,
@@ -169,7 +168,6 @@ def main(config_path: str = os.path.join(os.path.dirname(__file__), "config.yaml
         X_train, X_test, y_train, y_test, train_texts, test_texts, dirs["tfidf"], prefix="tfidf"
     )
 
-    # TF-IDF models
     models = build_models(config)
     cv_df_tfidf = cross_validate_models(
         models,
@@ -186,7 +184,6 @@ def main(config_path: str = os.path.join(os.path.dirname(__file__), "config.yaml
         results_path=os.path.join(dirs["tfidf"], "test_results.csv"),
     )
 
-    # Embedding-based model
     embed_predictions = {}
     cv_df_emb = pd.DataFrame()
     test_df_emb = pd.DataFrame()
@@ -209,7 +206,6 @@ def main(config_path: str = os.path.join(os.path.dirname(__file__), "config.yaml
     except ImportError as exc:
         print(f"Embedding comparison skipped: {exc}")
 
-    # Persist TF-IDF results
     cv_df_tfidf.to_csv(os.path.join(dirs["tfidf"], "cross_validation_results.csv"), index=False)
     plot_model_comparison(cv_df_tfidf, test_df_tfidf, dirs["tfidf_plots"])
     plot_confusion_matrices(predictions, dirs["tfidf_plots"])
@@ -220,7 +216,6 @@ def main(config_path: str = os.path.join(os.path.dirname(__file__), "config.yaml
     plot_error_bars(error_df_tfidf, dirs["tfidf_plots"])
     export_classification_reports(predictions, dirs["tfidf"])
 
-    # Persist embedding results if available
     if not cv_df_emb.empty and embed_predictions:
         plot_model_comparison(cv_df_emb, test_df_emb, dirs["embed_plots"])
         plot_confusion_matrices(embed_predictions, dirs["embed_plots"])

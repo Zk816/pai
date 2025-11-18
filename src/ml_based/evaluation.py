@@ -156,8 +156,8 @@ def plot_confusion_matrices(predictions: Dict, output_dir: str) -> str:
             cbar=True,
             square=True,
             ax=axes[idx],
-            xticklabels=["Non-Toxic", "Toxic"],
-            yticklabels=["Non-Toxic", "Toxic"],
+            xticklabels=["Toxic", "Non-Toxic"],
+            yticklabels=["Toxic", "Non-Toxic"],
         )
         axes[idx].set_title(f"{model_name}\nConfusion Matrix", fontweight="bold")
         axes[idx].set_ylabel("True Label")
@@ -232,8 +232,8 @@ def error_analysis(predictions: Dict, test_texts: pd.DataFrame, output_dir: str)
         y_pred = preds["y_pred"]
 
         misclassified_mask = y_test_curr != y_pred
-        fp_mask = (y_pred == 1) & (y_test_curr == 0)
-        fn_mask = (y_pred == 0) & (y_test_curr == 1)
+        fp_mask = (y_pred == 0) & (y_test_curr == 1)
+        fn_mask = (y_pred == 1) & (y_test_curr == 0)
 
         results.append(
             {
@@ -298,7 +298,7 @@ def export_classification_reports(predictions: Dict, output_dir: str) -> Dict[st
     report_paths = {}
 
     for model_name, preds in predictions.items():
-        report = classification_report(preds["y_test"], preds["y_pred"], target_names=["Non-Toxic", "Toxic"], output_dict=True)
+        report = classification_report(preds["y_test"], preds["y_pred"], target_names=["Toxic", "Non-Toxic"], output_dict=True)
         report_df = pd.DataFrame(report).transpose()
         filepath = os.path.join(output_dir, f"{model_name.replace(' ', '_')}_classification_report.csv")
         report_df.to_csv(filepath)

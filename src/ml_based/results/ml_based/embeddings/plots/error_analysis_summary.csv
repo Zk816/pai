@@ -1,0 +1,2 @@
+Model,Total_Errors,False_Positives,False_Negatives,Error_Rate
+Logistic Regression (Embeddings),1232,572,660,0.08779931584948689
