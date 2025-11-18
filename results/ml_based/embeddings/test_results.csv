@@ -1,2 +1,0 @@
-Model,Accuracy,F1_Macro,ROC_AUC
-Logistic Regression (Embeddings),0.9122006841505131,0.9121972308497446,0.9727889437272552
